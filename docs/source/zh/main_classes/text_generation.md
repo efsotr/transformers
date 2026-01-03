@@ -22,6 +22,10 @@ rendered properly in your Markdown viewer.
 
 无论您选择哪个框架，都可以使用 [`~generation.GenerationConfig`] 类实例对 generate 方法进行参数化。有关生成方法的控制参数的完整列表，请参阅此类。
 
+> [!INFO]
+> - `pipeline("text-generation")` 会在实例化时以管道的 `_default_generation_config`（`max_new_tokens=256`、`do_sample=True`、`temperature=0.7`）为基底，并调用 `model._prepare_generation_config` 合并配置，优先级为：调用时显式传入的生成参数（或 `generation_config`） > 模型仓库中的 `generation_config.json`（不存在时退回 `config.json` 推断出的生成参数） > 管道默认值。
+> - 直接调用 `model.generate()` 时，`GenerationMixin._prepare_generation_config` 以“显式传入的 `generation_config`/`**kwargs` > `model.generation_config`（加载自 `generation_config.json`，若不存在则由 `config.json` 推断） > 全局默认生成配置”的顺序得到最终的生成配置。
+
 要了解如何检查模型的生成配置、默认值是什么、如何临时更改参数以及如何创建和保存自定义生成配置，请参阅 [文本生成策略指南](../generation_strategies)。该指南还解释了如何使用相关功能，如token流。
 
 ## GenerationConfig
